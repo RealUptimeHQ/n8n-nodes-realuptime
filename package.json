@@ -1,0 +1,55 @@
+{
+  "name": "n8n-nodes-realuptime",
+  "version": "0.1.0",
+  "description": "n8n nodes for RealUptime: uptime monitors, incidents, status pages and free \"is X down?\" outage checks.",
+  "keywords": [
+    "n8n-community-node-package",
+    "realuptime",
+    "uptime",
+    "monitoring",
+    "status page",
+    "incidents",
+    "outages"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/RealUptimeHQ/n8n-nodes-realuptime#readme",
+  "author": {
+    "name": "RealUptime",
+    "email": "support@realuptime.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RealUptimeHQ/n8n-nodes-realuptime.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RealUptimeHQ/n8n-nodes-realuptime/issues"
+  },
+  "main": "index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc && cp nodes/RealUptime/realuptime.svg dist/nodes/RealUptime/ && cp credentials/realuptime.svg dist/credentials/",
+    "prepublishOnly": "npm run build"
+  },
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [
+      "dist/credentials/RealUptimeApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/RealUptime/RealUptime.node.js",
+      "dist/nodes/RealUptime/RealUptimeTrigger.node.js"
+    ]
+  },
+  "devDependencies": {
+    "n8n-workflow": "2.16.0",
+    "typescript": "5.6.3"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}
