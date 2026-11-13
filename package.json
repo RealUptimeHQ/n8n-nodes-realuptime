@@ -1,14 +1,14 @@
 {
   "name": "n8n-nodes-realuptime",
-  "version": "0.1.0",
-  "description": "n8n nodes for RealUptime: uptime monitors, incidents, status pages and free \"is X down?\" outage checks.",
+  "version": "0.2.0",
+  "description": "n8n nodes for RealUptime Monitoring: create and read uptime monitors, list incidents, start a workflow when a monitor goes down, and check whether a service is down.",
   "keywords": [
     "n8n-community-node-package",
     "realuptime",
     "uptime",
     "monitoring",
-    "status page",
     "incidents",
+    "heartbeat",
     "outages"
   ],
   "license": "MIT",
@@ -24,15 +24,17 @@
   "bugs": {
     "url": "https://github.com/RealUptimeHQ/n8n-nodes-realuptime/issues"
   },
-  "main": "index.js",
   "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
+    "dist"
   ],
   "scripts": {
-    "build": "tsc && cp nodes/RealUptime/realuptime.svg dist/nodes/RealUptime/ && cp credentials/realuptime.svg dist/credentials/",
-    "prepublishOnly": "npm run build"
+    "build": "n8n-node build",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "release": "n8n-node release",
+    "prepublishOnly": "n8n-node prerelease",
+    "test": "node --test test/*.test.mjs"
   },
   "n8n": {
     "n8nNodesApiVersion": 1,
@@ -46,8 +48,12 @@
     ]
   },
   "devDependencies": {
+    "@n8n/node-cli": "0.56.3",
+    "eslint": "9.39.4",
     "n8n-workflow": "2.16.0",
-    "typescript": "5.6.3"
+    "prettier": "3.8.3",
+    "release-it": "20.2.0",
+    "typescript": "5.9.3"
   },
   "peerDependencies": {
     "n8n-workflow": "*"

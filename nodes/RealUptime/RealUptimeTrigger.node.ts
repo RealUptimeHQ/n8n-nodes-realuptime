@@ -1,9 +1,10 @@
-import type {
-	IDataObject,
-	INodeExecutionData,
-	INodeType,
-	INodeTypeDescription,
-	IPollFunctions,
+import {
+	NodeConnectionTypes,
+	type IDataObject,
+	type INodeExecutionData,
+	type INodeType,
+	type INodeTypeDescription,
+	type IPollFunctions,
 } from 'n8n-workflow';
 
 const BASE_URL = 'https://realuptime.io/api/v1';
@@ -24,11 +25,11 @@ export class RealUptimeTrigger implements INodeType {
 		group: ['trigger'],
 		version: 1,
 		subtitle: '={{$parameter["event"]}}',
-		description: 'Starts the workflow when a RealUptime incident opens or a check goes down',
+		description: 'Starts the workflow when a RealUptime incident opens or a monitor goes down',
 		defaults: { name: 'RealUptime Trigger' },
 		polling: true,
 		inputs: [],
-		outputs: ['main'],
+		outputs: [NodeConnectionTypes.Main],
 		credentials: [{ name: 'realUptimeApi', required: true }],
 		properties: [
 			{
@@ -42,9 +43,9 @@ export class RealUptimeTrigger implements INodeType {
 						description: 'A new incident appears on any of your monitors',
 					},
 					{
-						name: 'Check Down',
+						name: 'Monitor Down',
 						value: 'checkDown',
-						description: 'A check moves to down (or degraded, if selected below)',
+						description: 'A monitor moves to down (or degraded, if selected below)',
 					},
 				],
 				default: 'incidentOpened',
@@ -54,7 +55,7 @@ export class RealUptimeTrigger implements INodeType {
 				name: 'includeDegraded',
 				type: 'boolean',
 				default: false,
-				description: 'Whether a check moving to degraded should also start the workflow',
+				description: 'Whether a monitor moving to degraded should also start the workflow',
 				displayOptions: { show: { event: ['checkDown'] } },
 			},
 		],

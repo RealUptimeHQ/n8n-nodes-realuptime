@@ -1,16 +1,16 @@
-import type { INodeType, INodeTypeDescription } from 'n8n-workflow';
+import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
 
 const REGIONS = [
-	{ name: 'US East (iad)', value: 'iad' },
-	{ name: 'US West (sjc)', value: 'sjc' },
-	{ name: 'US Central (ord)', value: 'ord' },
-	{ name: 'Canada (yyz)', value: 'yyz' },
-	{ name: 'Europe (fra)', value: 'fra' },
-	{ name: 'UK (lhr)', value: 'lhr' },
-	{ name: 'Asia-Pacific (nrt)', value: 'nrt' },
-	{ name: 'Southeast Asia (sin)', value: 'sin' },
-	{ name: 'Australia (syd)', value: 'syd' },
-	{ name: 'South America (gru)', value: 'gru' },
+	{ name: 'US East (IAD)', value: 'iad' },
+	{ name: 'US West (SJC)', value: 'sjc' },
+	{ name: 'US Central (ORD)', value: 'ord' },
+	{ name: 'Canada (YYZ)', value: 'yyz' },
+	{ name: 'Europe (FRA)', value: 'fra' },
+	{ name: 'UK (LHR)', value: 'lhr' },
+	{ name: 'Asia-Pacific (NRT)', value: 'nrt' },
+	{ name: 'Southeast Asia (SIN)', value: 'sin' },
+	{ name: 'Australia (SYD)', value: 'syd' },
+	{ name: 'South America (GRU)', value: 'gru' },
 ];
 
 export class RealUptime implements INodeType {
@@ -21,11 +21,11 @@ export class RealUptime implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Read and manage RealUptime monitors and incidents, and check whether a service is down',
+		description: 'Create and read RealUptime uptime monitors, list their incidents, and check whether a service is down',
 		defaults: { name: 'RealUptime' },
 		usableAsTool: true,
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
 				name: 'realUptimeApi',
@@ -44,7 +44,7 @@ export class RealUptime implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
-					{ name: 'Check', value: 'check' },
+					{ name: 'Monitor', value: 'check' },
 					{ name: 'Incident', value: 'incident' },
 					{ name: 'Outage', value: 'outage' },
 				],
@@ -62,8 +62,8 @@ export class RealUptime implements INodeType {
 					{
 						name: 'Create',
 						value: 'create',
-						action: 'Create an HTTP check',
-						description: 'Create an HTTP uptime check',
+						action: 'Create an HTTP monitor',
+						description: 'Create an HTTP uptime monitor',
 						routing: {
 							request: { method: 'POST', url: '/checks' },
 							output: { postReceive: [{ type: 'rootProperty', properties: { property: 'check' } }] },
@@ -72,15 +72,15 @@ export class RealUptime implements INodeType {
 					{
 						name: 'Get',
 						value: 'get',
-						action: 'Get a check',
-						description: "Get one check's current status, region by region",
+						action: 'Get a monitor',
+						description: "Get one monitor's current status, region by region",
 						routing: { request: { method: 'GET', url: '=/checks/{{$parameter.checkId}}' } },
 					},
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						action: 'Get many checks',
-						description: 'List every check on the account',
+						action: 'Get many monitors',
+						description: 'List every monitor on the account',
 						routing: {
 							request: { method: 'GET', url: '/checks' },
 							output: { postReceive: [{ type: 'rootProperty', properties: { property: 'checks' } }] },
@@ -90,7 +90,7 @@ export class RealUptime implements INodeType {
 				default: 'getAll',
 			},
 			{
-				displayName: 'Check ID',
+				displayName: 'Monitor ID',
 				name: 'checkId',
 				type: 'string',
 				required: true,
@@ -146,7 +146,7 @@ export class RealUptime implements INodeType {
 						name: 'latencyThresholdMs',
 						type: 'number',
 						default: 0,
-						description: 'Mark the check degraded above this response time',
+						description: 'Mark the monitor degraded above this response time',
 						routing: { send: { type: 'body', property: 'latencyThresholdMs' } },
 					},
 				],
@@ -183,7 +183,6 @@ export class RealUptime implements INodeType {
 				displayOptions: { show: { resource: ['incident'], operation: ['getAll'] } },
 				routing: { send: { type: 'query', property: 'limit' } },
 			},
-
 			// Outage (public, no key needed)
 			{
 				displayName: 'Operation',
@@ -197,7 +196,7 @@ export class RealUptime implements INodeType {
 						value: 'get',
 						action: 'Check if a service is down',
 						description:
-							"Whether RealUptime's own checks of a popular service fail right now, region by region, beside the vendor's status page. No API key needed.",
+							"Whether RealUptime's own checks of a service listed on realuptime.io/outages fail right now, region by region, beside the vendor's status page. No API key needed.",
 						routing: { request: { method: 'GET', url: '=/outages/{{$parameter.service}}' } },
 					},
 				],
@@ -210,7 +209,7 @@ export class RealUptime implements INodeType {
 				required: true,
 				default: '',
 				placeholder: 'github',
-				description: 'The service slug as it appears on realuptime.io/outages, for example github, stripe or cloudflare',
+				description: 'The service slug as it appears on realuptime.io/outages, for example github or microsoft-365',
 				displayOptions: { show: { resource: ['outage'], operation: ['get'] } },
 			},
 		],

@@ -22,7 +22,7 @@ export class RealUptimeApi implements ICredentialType {
 			typeOptions: { password: true },
 			default: '',
 			description:
-				'Create a key at https://dashboard.realuptime.io/account/api-keys. Keys work on every plan, including Free.',
+				'Create a key at https://dashboard.realuptime.io/account/api-keys. Keys work on every plan, including Free. No account yet? Sign up free at https://realuptime.io/signup?utm_source=n8n&utm_medium=marketplace&utm_campaign=connect',
 		},
 	];
 
