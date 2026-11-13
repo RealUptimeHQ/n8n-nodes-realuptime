@@ -21,12 +21,18 @@ export class RealUptime implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Create and read RealUptime uptime monitors and list their incidents',
+		description: 'Create and read RealUptime uptime monitors, list their incidents, and check whether a service is down',
 		defaults: { name: 'RealUptime' },
 		usableAsTool: true,
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
-		credentials: [{ name: 'realUptimeApi', required: true }],
+		credentials: [
+			{
+				name: 'realUptimeApi',
+				required: true,
+				displayOptions: { show: { resource: ['check', 'incident'] } },
+			},
+		],
 		requestDefaults: {
 			baseURL: 'https://realuptime.io/api/v1',
 			headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
@@ -40,6 +46,7 @@ export class RealUptime implements INodeType {
 				options: [
 					{ name: 'Monitor', value: 'check' },
 					{ name: 'Incident', value: 'incident' },
+					{ name: 'Outage', value: 'outage' },
 				],
 				default: 'check',
 			},
@@ -175,6 +182,35 @@ export class RealUptime implements INodeType {
 				description: 'Max number of results to return',
 				displayOptions: { show: { resource: ['incident'], operation: ['getAll'] } },
 				routing: { send: { type: 'query', property: 'limit' } },
+			},
+			// Outage (public, no key needed)
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: { show: { resource: ['outage'] } },
+				options: [
+					{
+						name: 'Get',
+						value: 'get',
+						action: 'Check if a service is down',
+						description:
+							"Whether RealUptime's own checks of a service listed on realuptime.io/outages fail right now, region by region, beside the vendor's status page. No API key needed.",
+						routing: { request: { method: 'GET', url: '=/outages/{{$parameter.service}}' } },
+					},
+				],
+				default: 'get',
+			},
+			{
+				displayName: 'Service',
+				name: 'service',
+				type: 'string',
+				required: true,
+				default: '',
+				placeholder: 'github',
+				description: 'The service slug as it appears on realuptime.io/outages, for example github or microsoft-365',
+				displayOptions: { show: { resource: ['outage'], operation: ['get'] } },
 			},
 		],
 	};

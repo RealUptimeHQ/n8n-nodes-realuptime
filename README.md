@@ -1,6 +1,6 @@
 # n8n-nodes-realuptime
 
-[n8n](https://n8n.io) community nodes for [RealUptime](https://realuptime.io) Monitoring: create and read uptime monitors, list incidents, and start a workflow when a monitor goes down or an incident opens. RealUptime is uptime monitoring and error tracking on one plan, with a Free plan that needs no card.
+[n8n](https://n8n.io) community nodes for [RealUptime](https://realuptime.io) Monitoring: create and read uptime monitors, list incidents, start a workflow when a monitor goes down or an incident opens, and check whether a service listed on realuptime.io/outages is down. RealUptime is uptime monitoring and error tracking on one plan, with a Free plan that needs no card.
 
 ## Nodes
 
@@ -10,6 +10,7 @@
 | --- | --- |
 | Monitor | Create (HTTP monitor), Get (current status, region by region), Get Many |
 | Incident | Get Many (newest first) |
+| Outage | Get: whether RealUptime's own checks of a service listed on [realuptime.io/outages](https://realuptime.io/outages) (for example `github` or `microsoft-365`) fail right now, beside the vendor's status page. No API key needed |
 
 **RealUptime Trigger** (polling)
 
@@ -26,7 +27,7 @@ In n8n: **Settings > Community Nodes > Install**, then enter `n8n-nodes-realupti
 2. Create an API key at <https://dashboard.realuptime.io/account/api-keys>. It starts with `ru_live_`.
 3. In n8n, add a **RealUptime API** credential and paste the key. n8n tests it by listing your monitors.
 
-The key is sent as `Authorization: Bearer <key>` to `https://realuptime.io/api/v1`.
+The key is sent as `Authorization: Bearer <key>` to `https://realuptime.io/api/v1`. The Outage operation does not need a key.
 
 ## Example workflows
 

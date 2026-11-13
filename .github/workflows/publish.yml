@@ -2,9 +2,9 @@
 # tag (for example 0.2.0) is pushed. n8n requires verified community nodes
 # to be published this way.
 #
-# npm authenticates this workflow through trusted publishing (OIDC): the
-# package's settings on npmjs.com name RealUptimeHQ/n8n-nodes-realuptime and
-# publish.yml as its trusted publisher, so no npm token is stored here.
+# npm authenticates with the NPM_TOKEN repository secret (the company npm
+# token from the vault). The provenance statement comes from GitHub's OIDC
+# token (id-token: write), independent of how npm authenticates.
 #
 # To release: bump "version" in package.json and CHANGELOG.md in a pull
 # request, merge it, then push a tag equal to the version from main.
@@ -39,7 +39,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Test
+        run: npm test
+
       # Inside GitHub Actions, n8n-node release lints, builds and runs
       # npm publish with provenance.
       - name: Lint, build and publish with provenance
         run: npm run release
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

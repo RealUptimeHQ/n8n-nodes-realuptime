@@ -1,14 +1,15 @@
 {
   "name": "n8n-nodes-realuptime",
   "version": "0.2.0",
-  "description": "n8n nodes for RealUptime Monitoring: create and read uptime monitors, list incidents, and start a workflow when a monitor goes down or an incident opens.",
+  "description": "n8n nodes for RealUptime Monitoring: create and read uptime monitors, list incidents, start a workflow when a monitor goes down, and check whether a service is down.",
   "keywords": [
     "n8n-community-node-package",
     "realuptime",
     "uptime",
     "monitoring",
     "incidents",
-    "heartbeat"
+    "heartbeat",
+    "outages"
   ],
   "license": "MIT",
   "homepage": "https://github.com/RealUptimeHQ/n8n-nodes-realuptime#readme",
@@ -32,7 +33,8 @@
     "lint": "n8n-node lint",
     "lint:fix": "n8n-node lint --fix",
     "release": "n8n-node release",
-    "prepublishOnly": "n8n-node prerelease"
+    "prepublishOnly": "n8n-node prerelease",
+    "test": "node --test test/*.test.mjs"
   },
   "n8n": {
     "n8nNodesApiVersion": 1,
