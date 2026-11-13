@@ -26,13 +26,7 @@ export class RealUptime implements INodeType {
 		usableAsTool: true,
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
-		credentials: [
-			{
-				name: 'realUptimeApi',
-				required: true,
-				displayOptions: { show: { resource: ['check', 'incident'] } },
-			},
-		],
+		credentials: [{ name: 'realUptimeApi', required: true }],
 		requestDefaults: {
 			baseURL: 'https://realuptime.io/api/v1',
 			headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
@@ -46,7 +40,6 @@ export class RealUptime implements INodeType {
 				options: [
 					{ name: 'Monitor', value: 'check' },
 					{ name: 'Incident', value: 'incident' },
-					{ name: 'Outage', value: 'outage' },
 				],
 				default: 'check',
 			},
@@ -182,36 +175,6 @@ export class RealUptime implements INodeType {
 				description: 'Max number of results to return',
 				displayOptions: { show: { resource: ['incident'], operation: ['getAll'] } },
 				routing: { send: { type: 'query', property: 'limit' } },
-			},
-
-			// Outage (public, no key needed)
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: { show: { resource: ['outage'] } },
-				options: [
-					{
-						name: 'Get',
-						value: 'get',
-						action: 'Check if a service is down',
-						description:
-							"Whether RealUptime's own checks of a popular service fail right now, region by region, beside the vendor's status page. No API key needed.",
-						routing: { request: { method: 'GET', url: '=/outages/{{$parameter.service}}' } },
-					},
-				],
-				default: 'get',
-			},
-			{
-				displayName: 'Service',
-				name: 'service',
-				type: 'string',
-				required: true,
-				default: '',
-				placeholder: 'github',
-				description: 'The service slug as it appears on realuptime.io/outages, for example github, stripe or cloudflare',
-				displayOptions: { show: { resource: ['outage'], operation: ['get'] } },
 			},
 		],
 	};
