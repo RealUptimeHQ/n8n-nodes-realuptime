@@ -1,2 +1,10 @@
 node_modules
 dist
+
+# Local secrets never belong in this repository.
+.env
+.env.*
+!.env.example
+*.pem
+*.p8
+*.key
